@@ -1,0 +1,3 @@
+services.manifest
+views/*
+sessions/sess_*
