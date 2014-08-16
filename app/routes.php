@@ -8,7 +8,12 @@
   | and give it the Closure to execute when that URI is requested.
   |
  */
+Route::get('/sites', 'HomeController@sites');
 Route::get('/databases', 'HomeController@databases');
+Route::get('/mysql', 'HomeController@mysql');
+Route::get('/mongo', 'HomeController@mongo');
+Route::get('/apache2', 'HomeController@apache2');
+Route::get('/nginx', 'HomeController@nginx');
 
 Route::get('/', 'HomeController@index');
 

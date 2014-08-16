@@ -1,19 +1,5 @@
 <?php
 /*
- * ************************************************************************
-  @description: MV-Core
-  @link: https://github.com/lasellers
-  @author: Lewis A. Sellers lasellers@gmail.com 2012-2013
- * ************************************************************************
-
- * ************************************************************************
-  by Lewis Sellers, 2006-2012,2013
-  Lewis A. Sellers http://lewisasellers.com
-  Canny Bird Creative http://www.CannyBirdCreative.com
-  Cedar Grove Design http://www.cedargrovedesign.com
-  Intrafoundation Software http://www.Intrafoundation.com
-  Communal Perfection http://www.CommunalPerfection.com
- * ************************************************************************
  */
 /**
  *

@@ -10,6 +10,19 @@ class HomeController extends BaseController
 //		$this->beforeFilter('csrf', array ('on'=>'post'));
 	}
 
+//
+	private function get_show_databases()
+	{
+		$show_databases=DB::select("SHOW DATABASES");
+
+		$databases=array();
+		foreach($show_databases as $database)
+		{
+			$databases[]=$database->Database;
+		}
+
+		return $databases;
+	}
 	
 // --------------------------------------------------------------------
 	private function decode_conf($file)
@@ -58,12 +71,27 @@ class HomeController extends BaseController
 
 	public function index()
 	{
+		return View::make('home.index')
+		->with('meta_title', 'Home')
+
+		;
+	}
+
+// --------------------------------------------------------------------
+
+	public function sites()
+	{
+		$databases=$this->get_show_databases();
+		$sites=array();
+
 		$srcfiles=glob("/etc/apache2/sites-available/*.conf");
 		$sites_available=array();
 		foreach ($srcfiles as $file) {
 			$parts=explode("/",$file);
 			$filename=$parts[count($parts)-1];
 			$sites_available[$filename]=$this->decode_conf($file);
+
+			$sites[$filename]=$sites_available[$filename]->IP;
 		}
 
 		$srcfiles=glob("/etc/apache2/sites-enabled/*.conf");
@@ -73,8 +101,9 @@ class HomeController extends BaseController
 			$filename=$parts[count($parts)-1];
 			$sites_enabled[$filename]=$this->decode_conf($file);
 		}
-		return View::make('home.index')
-		->with('meta_title', 'Home')
+		return View::make('home.sites')
+		->with('meta_title', 'Sites')
+		->with('sites', $sites)
 		->with('sites_available', $sites_available)
 		->with('sites_enabled', $sites_enabled)
 		;
@@ -84,39 +113,87 @@ class HomeController extends BaseController
 
 	public function databases()
 	{
-		$databases=DB::select("SHOW DATABASES");
+		$databases=$this->get_show_databases();
+
+		//
 		$datas=array();
 		$tables=array();
+		$default=array(
+			0=>array(
+				'Name'=>'',
+				'Engine'=>'',
+				'Version'=>'',
+				'Rows'=>''
+				)
+			);
 		foreach($databases as $database)
 		{
-			$dbname=$database->Database;
-
-			if(!in_array($dbname,array('','mysql','performance_schema','information_schema')))
+		//	echo "database=$database<br>";
+			if(!in_array($database,array('','mysql','performance_schema','information_schema')))
 			{
-			//$tables=DB::select("SHOW TABLE STATUS FROM ?;",array($dbname));
-				$tables=DB::select("SHOW TABLE STATUS FROM $dbname");
+			//$tables=DB::select("SHOW TABLE STATUS FROM ?;",array($database));
+				$tables=DB::select("SHOW TABLE STATUS FROM $database");
 			//$datas=array_merge($datas,$tables);
-				$datas[$dbname]=$tables;
+				$datas[$database]=$tables;
 			}
+			else
+			{
+				$datas[$database]=json_decode(json_encode($default),FALSE);
+			}
+			//	echo "<pre>"; print_r($tables); echo "</pre>";; 
+				//echo "<hr><hr>";
 		}
+		//echo "<pre>"; print_r($datas); exit; 
 
 		return View::make('home.databases')
-		->with('meta_title', 'Home')
+		->with('meta_title', 'Databases')
 		->with('databases', $databases)
 		->with('tables', $tables)
 		->with('datas', $datas)
 		;
 	}
-		/*
-		show databases;
-		SHOW TABLE STATUS FROM singletreerealtytn;
 
-show logs; show errors;
-show  binary logs;
 
-show plugins;
-show processlist;
-		*/
+	public function mysql()
+	{
+		$databases=$this->get_show_databases();
+		$sites=array();
+
+
+$plugins=DB::select("SHOW PLUGINS");
+$processlists=DB::select("SHOW PROCESSLIST");
+$logs=DB::select("SHOW STATUS");
+$engines=DB::select("SHOW ENGINES");
+$opentables=DB::select("SHOW OPEN TABLES");
+$variables=DB::select("SHOW VARIABLES");
+
+		return View::make('home.mysql')
+		->with('meta_title', 'MySQL')
+		->with('plugins', $plugins)
+		->with('processlists', $processlists)
+		->with('logs', $logs)
+		->with('engines', $engines)
+		->with('opentables', $opentables)
+		->with('variables', $variables)
+		;
+	}
+
+	public function mongo()
+	{
+		return View::make('home.mongo')
+		->with('meta_title', 'Mongo')
+		;
+	}
+
+
+
+
+	public function apache2()
+	{
+		return View::make('home.apache2')
+		->with('meta_title', 'Apache2')
+		;
+	}
 	// --------------------------------------------------------------------
 }
 ?>

@@ -30,8 +30,14 @@
 
    <div class="collapse navbar-collapse" id="mast-collapse">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="/">Home</a></li>
-      <li><a href="/databases">Databases</a></li>
+      <li class="active"><a href="/sites">Sites</a></li>
+      <li class="active"><a href="/databases">Databases</a></li>
+      <?php if(file_exists('/etc/mysql/')) { ?><li class="active"><a href="/mysql">MySQL</a></li><?php } ?>
+      <?php if(file_exists('/etc/mongo/')) { ?><li class="active"><a href="/mongo">Mongo</a></li><?php } ?>
+      <?php if(file_exists('/etc/apache2/')) { ?><li class="active"><a href="/apache2">Apache2</a></li><?php } ?>
+      <?php if(file_exists('/etc/nginx/')) { ?>li class="active"><a href="/apache2">Nginx</a></li><?php } ?>
+      <!--li class="active"><a href="/node.js">Node.js</a></li-->
+     @yield('nav')
       <li><a href="http://github.com/lasellers">Github</a></li>
     </ul>
 
@@ -66,7 +72,7 @@
 
 <hr>
 
-<div class="row" id="status-dialog">
+<div class="row" id="status-dialog" style="display:none">
   <img src="/images/spinner.gif">
 </div>
 
