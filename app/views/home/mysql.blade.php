@@ -78,7 +78,18 @@
 		</table>
 	</div>
 	<div>
+<!--
+	//$pdo = DB::connection()->getPdo();
+	// $PDO->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
+show events;
+ SELECT CURRENT_USER(), SCHEMA();
 
+SHOW VARIABLES LIKE 'max_join_size';
+SHOW SESSION VARIABLES LIKE 'max_join_size';
+To get a list of variables whose name match a pattern, use the “%” wildcard character in a LIKE clause:
+ SELECT VERSION()\G
+SHOW VARIABLES LIKE '%size%';
+SHOW GLOBAL VARIABLES LIKE '%size%';-->
 @stop
 
 @section('scripts')

@@ -13,11 +13,11 @@
 @stop
 
 @section('content')
-<h2>Sites Available</h2>
+<h2>Apache2 Sites Available</h2>
 <div class="row">
 	<div class="col-md-12 panel-main">
 
-		<table class="table table-striped">
+		<table class="table table-striped table-hover table-responsive">
 			<tr>
 				<th>file</th>
 				<th>Size</th>
@@ -47,11 +47,11 @@
 </div>
 <div>
 
-<h2>Sites Enabled</h2>
+<h2>Apache2 Sites Enabled</h2>
 	<div class="row">
 		<div class="col-md-12 panel-main">
 
-			<table class="table table-striped">
+			<table class="table table-striped table-condensed">
 				<tr>
 					<th>file</th>
 					<th>Size</th>

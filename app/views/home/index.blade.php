@@ -5,14 +5,12 @@
 @stop
 
 @section('content')
-<h2>Sites</h2>
-<div class="row">
-	<div class="col-md-12 panel-main">
 
-
+<div class="jumbotron">
+  <h1>DevPanel</h1>
+  <p>Development Server Panel (DevPanel) is a PHP/Laravel project meant to be placed in the default folder (/var/www) of your LAMP style dev server.</p>
+  <!--p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p-->
 </div>
-</div>
-
 @stop
 
 @section('scripts')

@@ -24,6 +24,52 @@ class HomeController extends BaseController
 		return $databases;
 	}
 	
+
+// --------------------------------------------------------------------
+
+	private function get_drupal_version($path)
+	{
+		if(file_exists($path."/CHANGELOG.txt"))
+		{
+			$raw=file_get_contents($path."/CHANGELOG.txt");
+			$csv=explode("\n",$raw);
+			foreach($csv as $line)
+			{
+				$line=trim($line);
+				$a=explode(" ",$line);
+				if($a[0]=='Drupal')
+					return $line;
+			}
+		}
+
+		return 'Drupal';
+	}
+
+
+// --------------------------------------------------------------------
+
+	private function get_laravel_version($path)
+	{
+		//echo "$path/vendor/composer/installed.json<br>";
+		if(file_exists($path."/vendor/composer/installed.json"))
+		{
+			$json=file_get_contents($path."/vendor/composer/installed.json");
+		//	print_r($json); 
+			$installs=json_decode($json);
+			foreach($installs as $install)
+			{
+				if($install->name=='laravel/framework')
+				{
+					return 'Laravel '.$install->version;
+				}
+			}
+
+		}
+
+		return 'Laravel';
+	}
+
+
 // --------------------------------------------------------------------
 	private function decode_conf($file)
 	{
@@ -57,13 +103,22 @@ class HomeController extends BaseController
 			$last=array_pop($a);
 			$uppath=implode("/",$a);
 			if(file_exists($path."/sites/default/settings.php"))
-				$conf['Engine']='Drupal';
+			{
+				//$conf['Engine']='Drupal';
+				$conf['Engine']=$this->get_drupal_version($path);
+			}
 			else if(file_exists($path."/wp-admin/"))
 				$conf['Engine']='WordPress';
 			else if(file_exists($path."/app/start/artisan.php"))
-				$conf['Engine']='Laravel';	
+			{
+				//$conf['Engine']='Laravel';
+				$conf['Engine']=$this->get_laravel_version($uppath);
+			}
 			else if($last=='public'&&file_exists($uppath."/app/start/artisan.php"))
-				$conf['Engine']='Laravel';
+			{
+				//$conf['Engine']='Laravel';
+				$conf['Engine']=$this->get_laravel_version($uppath);
+			}
 		}
 		return json_decode(json_encode($conf),FALSE);
 	}
@@ -73,7 +128,6 @@ class HomeController extends BaseController
 	{
 		return View::make('home.index')
 		->with('meta_title', 'Home')
-
 		;
 	}
 
@@ -153,6 +207,7 @@ class HomeController extends BaseController
 		;
 	}
 
+	// ---------------------------------------------------------------
 
 	public function mysql()
 	{
@@ -160,12 +215,12 @@ class HomeController extends BaseController
 		$sites=array();
 
 
-$plugins=DB::select("SHOW PLUGINS");
-$processlists=DB::select("SHOW PROCESSLIST");
-$logs=DB::select("SHOW STATUS");
-$engines=DB::select("SHOW ENGINES");
-$opentables=DB::select("SHOW OPEN TABLES");
-$variables=DB::select("SHOW VARIABLES");
+		$plugins=DB::select("SHOW PLUGINS");
+		$processlists=DB::select("SHOW PROCESSLIST");
+		$logs=DB::select("SHOW STATUS");
+		$engines=DB::select("SHOW ENGINES");
+		$opentables=DB::select("SHOW OPEN TABLES");
+		$variables=DB::select("SHOW VARIABLES");
 
 		return View::make('home.mysql')
 		->with('meta_title', 'MySQL')
@@ -177,6 +232,8 @@ $variables=DB::select("SHOW VARIABLES");
 		->with('variables', $variables)
 		;
 	}
+	// ---------------------------------------------------------------
+
 
 	public function mongo()
 	{
@@ -185,6 +242,8 @@ $variables=DB::select("SHOW VARIABLES");
 		;
 	}
 
+
+	// ---------------------------------------------------------------
 
 
 

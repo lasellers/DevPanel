@@ -64,7 +64,7 @@ if(count($tables)>0)
 {
 //print_r($tables);exit;
 ?>
-     <table class="table table-striped">
+     <table class="table table-striped table-hover table-responsive">
   <caption>{{$database}}</caption>
     <?php MySQLObject::print_obj_header($tables[0]); ?>
         
