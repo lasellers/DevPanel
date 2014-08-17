@@ -17,6 +17,11 @@
 <p>All content and graphics of this project are copyright.</p>
 </details>
 
+<?php
+$ip = gethostbyname('localhost');
+
+echo $ip;
+?>
 <!--
 <form>
  <input type="number" min="0" max="10" step="2" default="6">

@@ -25,6 +25,64 @@ class HomeController extends BaseController
 	}
 	
 
+
+// --------------------------------------------------------------------
+
+	private function get_main_ip()
+		{
+			$ip='127.0.0.1';
+
+$autos=array();
+$primary_auto='eth0';
+
+			$file="/etc/network/interfaces";
+		if(file_exists($file))
+		{
+			$raw=file_get_contents($file);
+			$csv=explode("\n",$raw);
+
+			//
+			foreach($csv as $line)
+			{
+				$line=trim($line);
+				$a=explode(" ",$line);
+				if($a[0]=='auto')
+				{
+					$autos[]=$a[1];
+				}
+			}
+			foreach($autos as $auto)
+			{
+				if(!in_array($auto,array('lo'))&&(strpos(':',$auto)===false))
+				{
+					$primary_auto=$auto;
+					break;
+			}
+		}
+		//	print_r($autos);
+	//echo "primary auto=$primary_auto<br>";
+			//
+			$searching=false;
+			foreach($csv as $line)
+			{
+				$line=trim($line);
+				$a=explode(" ",$line);
+				if($a[0]=='iface'&&$a[1]==$primary_auto)
+				{
+					$searching=true;
+				}
+				else if($searching===true&&$a[0]=='address')
+				{
+					$ip=$a[1];
+					break;
+				}
+			}
+		}
+
+		return array($ip,$primary_auto,$autos);
+	}
+
+
 // --------------------------------------------------------------------
 
 	private function get_drupal_version($path)
@@ -124,27 +182,27 @@ class HomeController extends BaseController
 		}
 
 			//
-			$path=$conf['DocumentRoot'];
-			$conf['file']=$path;
-			$a=explode("/",$path);
-				$last=array_pop($a);
-			$uppath=implode("/",$a);
+		$path=$conf['DocumentRoot'];
+		$conf['file']=$path;
+		$a=explode("/",$path);
+		$last=array_pop($a);
+		$uppath=implode("/",$a);
 		$last2=array_pop($a);
-			$uppath2=implode("/",$a);
-	$last3=array_pop($a);
-			$uppath3=implode("/",$a);
+		$uppath2=implode("/",$a);
+		$last3=array_pop($a);
+		$uppath3=implode("/",$a);
 			//
-			if($conf['DocumentRoot']=="/var/www")
-			{
-				$conf['Engine']='Default ';
+		if($conf['DocumentRoot']=="/var/www")
+		{
+			$conf['Engine']='Default ';
 				//$conf['Engine']=$this->get_drupal_version($path);
-				$conf['file']='default'.$conf['IP'];
-			}
-			else if(file_exists($path."/sites/default/settings.php"))
-			{
+			$conf['file']='default'.$conf['IP'];
+		}
+		else if(file_exists($path."/sites/default/settings.php"))
+		{
 				//$conf['Engine']='Drupal';
-				if($last2=='www')
-				{
+			if($last2=='www')
+			{
 				$conf['Engine']=$this->get_drupal_version($path);
 				$conf['file']=$path;
 			}
@@ -154,28 +212,28 @@ class HomeController extends BaseController
 				$conf['file']=$uppath;
 			}
 		}
-			else if(file_exists($path."/wp-admin/"))
-			{
-				$conf['Engine']='WordPress';
-			}
-			else if(file_exists($path."/app/start/artisan.php"))
-			{
+		else if(file_exists($path."/wp-admin/"))
+		{
+			$conf['Engine']='WordPress';
+		}
+		else if(file_exists($path."/app/start/artisan.php"))
+		{
 				//$conf['Engine']='Laravel';
-				$conf['Engine']=$this->get_laravel_version($uppath);
-				$conf['file']=$uppath;
-			}
-			else if($last=='public'&&file_exists($uppath."/app/start/artisan.php"))
-			{
+			$conf['Engine']=$this->get_laravel_version($uppath);
+			$conf['file']=$uppath;
+		}
+		else if($last=='public'&&file_exists($uppath."/app/start/artisan.php"))
+		{
 				//$conf['Engine']='Laravel';
-				$conf['Engine']=$this->get_laravel_version($uppath);
-				$conf['file']=$uppath;
-			}
-			else if($last=='webroot'&&$last2=='app'&&file_exists($uppath2."/lib/Cake/VERSION.txt"))
-			{
+			$conf['Engine']=$this->get_laravel_version($uppath);
+			$conf['file']=$uppath;
+		}
+		else if($last=='webroot'&&$last2=='app'&&file_exists($uppath2."/lib/Cake/VERSION.txt"))
+		{
 				//$conf['Engine']='CakePHP';
-				$conf['Engine']=$this->get_cakephp_version($uppath2);
-				$conf['file']=$uppath2;
-			}
+			$conf['Engine']=$this->get_cakephp_version($uppath2);
+			$conf['file']=$uppath2;
+		}
 		
 		//
 		$a=explode("/",$conf['file']);
@@ -250,6 +308,9 @@ class HomeController extends BaseController
 			}
 		}
 
+		//
+		list($ip,$primary_auto,$autos)=$this->get_main_ip();
+
 //
 		$sites_available= json_decode(json_encode($sites_available),FALSE);
 		$sites_enabled= json_decode(json_encode($sites_enabled),FALSE);
@@ -261,6 +322,9 @@ class HomeController extends BaseController
 		->with('sites_available', $sites_available )
 		->with('sites_enabled', $sites_enabled )
 		->with('folders', $folders )
+		->with('ip', $ip )
+		->with('primary_auto', $primary_auto )
+		->with('autos', $autos )
 		;
 	}
 
@@ -295,7 +359,7 @@ class HomeController extends BaseController
 				$datas[$database]=json_decode(json_encode($default),FALSE);
 			}
 		}
-	
+
 		return View::make('home.databases')
 		->with('meta_title', 'Databases')
 		->with('databases', $databases)

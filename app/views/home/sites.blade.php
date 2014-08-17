@@ -12,6 +12,8 @@
 @stop
 
 @section('content')
+<p>Primary Address <i>{{$ip}}</i></p>
+
 <h2>Apache2 Sites Available</h2>
 <div class="row">
 	<div class="col-md-12 panel-main">
@@ -43,6 +45,18 @@
 	@endforeach
 </table>
 
+</div>
+<div>
+
+
+
+<h2>Addresses</h2>
+<div class="row">
+	<div class="col-md-12 panel-main">
+
+	@foreach($autos as $auto)
+		<div class="col-md-1">{{$auto}}</div>
+		@endforeach
 </div>
 <div>
 
@@ -91,7 +105,7 @@
 			</tr>
 			@foreach($folders as $data)
 			<tr>
-				<td><a href="/{{$data->filename}}/">{{$data->filename}}</a></td>
+				<td><a href="http://{$ip}/{{$data->filename}}/">{{$data->filename}}</a></td>
 				<td>{{$data->size}}</td>
 			</tr>
 			@endforeach
