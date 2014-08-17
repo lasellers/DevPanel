@@ -1,29 +1,19 @@
 <?php
-class TestCase extends Illuminate\Foundation\Testing\TestCase
-{
-    /**
-     * Creates the application.
-     *
-     * @return Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication()
-    {
-        $unitTesting=true;
 
-        $testEnvironment='testing';
+class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
-        return require __DIR__.'/../../bootstrap/start.php';
-    }
-    private function prepareForTests()
-    {
-        Artisan::call('migrate');
-        Mail::pretend(true);
-    }
-    public function setUp()
-    {
-        parent::setUp(); // Don't forget this!
+	/**
+	 * Creates the application.
+	 *
+	 * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+	 */
+	public function createApplication()
+	{
+		$unitTesting = true;
 
-        $this->prepareForTests();
-    }
+		$testEnvironment = 'testing';
+
+		return require __DIR__.'/../../bootstrap/start.php';
+	}
+
 }
-?>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="devpanel.appcache">
 <head>
   <meta charset="utf-8">
   <title>{{$meta_title}} - Intrafoundation Software</title>
@@ -86,7 +86,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#"><small>by Intrafoundation Software 2014 v 0.0.3 alpha</small></a>
+    <a class="navbar-brand" href="#"><small>by Intrafoundation Software 2014 v 0.0.4 alpha</small></a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->

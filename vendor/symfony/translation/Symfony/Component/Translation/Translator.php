@@ -241,6 +241,16 @@ class Translator implements TranslatorInterface
         return strtr($this->selector->choose($catalogue->get($id, $domain), (int) $number, $locale), $parameters);
     }
 
+    /**
+     * Gets the loaders.
+     *
+     * @return array LoaderInterface[]
+     */
+    protected function getLoaders()
+    {
+        return $this->loaders;
+    }
+
     protected function loadCatalogue($locale)
     {
         try {
@@ -308,8 +318,8 @@ class Translator implements TranslatorInterface
      */
     private function assertValidLocale($locale)
     {
-        if (0 !== preg_match('/[^a-z0-9_\\.\\-]+/i', $locale, $match)) {
-            throw new \InvalidArgumentException(sprintf('Invalid locale: %s.', $locale));
+        if (1 !== preg_match('/^[a-z0-9@_\\.\\-]*$/i', $locale)) {
+            throw new \InvalidArgumentException(sprintf('Invalid "%s" locale.', $locale));
         }
     }
 }

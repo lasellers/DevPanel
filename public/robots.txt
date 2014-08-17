@@ -1,3 +1,2 @@
 User-agent: *
-Disallow: /cache
-Sitemap: http://www.intrafoundation.com/sitemap.xml
+Disallow:

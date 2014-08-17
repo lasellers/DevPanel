@@ -29,6 +29,7 @@ class HomeController extends BaseController
 
 	private function get_drupal_version($path)
 	{
+//		$arr=array('name')
 		if(file_exists($path."/CHANGELOG.txt"))
 		{
 			$raw=file_get_contents($path."/CHANGELOG.txt");
@@ -44,7 +45,6 @@ class HomeController extends BaseController
 
 		return 'Drupal';
 	}
-
 
 // --------------------------------------------------------------------
 
@@ -63,17 +63,38 @@ class HomeController extends BaseController
 					return 'Laravel '.$install->version;
 				}
 			}
-
 		}
 
 		return 'Laravel';
+	}
+// --------------------------------------------------------------------
+
+	private function get_cakephp_version($path)
+	{
+		if(file_exists($path."/lib/Cake/VERSION.txt"))
+		{
+			$raw=file_get_contents($path."/lib/Cake/VERSION.txt");
+			$csv=explode("\n",$raw);
+			foreach($csv as $line)
+			{
+				$line=trim($line);
+				$a=explode(" ",$line);
+				if(count($a)>2&&$a[1]=='@since')
+				{
+					array_shift($a);
+					array_shift($a);
+					return trim(implode(" ",$a));
+				}
+			}
+		}
+
+		return 'CakePHP';
 	}
 
 
 // --------------------------------------------------------------------
 	private function decode_conf($file)
 	{
-		$conf=array();
 		$conf=array(
 			'Size'=>filesize($file),
 			'ServerAdmin'=>'',
@@ -82,7 +103,9 @@ class HomeController extends BaseController
 			'ErrorLog'=>'',
 			'CustomLog'=>'',
 			'IP'=>'',
-			'Engine'=>''
+			'Engine'=>'',
+			'file'=>$file,
+			'filename'=>''
 			);
 		$raw=file_get_contents($file);
 		$csv=explode("\n",$raw);
@@ -98,29 +121,67 @@ class HomeController extends BaseController
 				else
 					$conf[$a[0]]=$a[1];
 			}
+		}
+
+			//
 			$path=$conf['DocumentRoot'];
+			$conf['file']=$path;
 			$a=explode("/",$path);
-			$last=array_pop($a);
+				$last=array_pop($a);
 			$uppath=implode("/",$a);
-			if(file_exists($path."/sites/default/settings.php"))
+		$last2=array_pop($a);
+			$uppath2=implode("/",$a);
+	$last3=array_pop($a);
+			$uppath3=implode("/",$a);
+			//
+			if($conf['DocumentRoot']=="/var/www")
+			{
+				$conf['Engine']='Default ';
+				//$conf['Engine']=$this->get_drupal_version($path);
+				$conf['file']='default'.$conf['IP'];
+			}
+			else if(file_exists($path."/sites/default/settings.php"))
 			{
 				//$conf['Engine']='Drupal';
+				if($last2=='www')
+				{
 				$conf['Engine']=$this->get_drupal_version($path);
+				$conf['file']=$path;
 			}
+			else
+			{
+				$conf['Engine']=$this->get_drupal_version($path);
+				$conf['file']=$uppath;
+			}
+		}
 			else if(file_exists($path."/wp-admin/"))
+			{
 				$conf['Engine']='WordPress';
+			}
 			else if(file_exists($path."/app/start/artisan.php"))
 			{
 				//$conf['Engine']='Laravel';
 				$conf['Engine']=$this->get_laravel_version($uppath);
+				$conf['file']=$uppath;
 			}
 			else if($last=='public'&&file_exists($uppath."/app/start/artisan.php"))
 			{
 				//$conf['Engine']='Laravel';
 				$conf['Engine']=$this->get_laravel_version($uppath);
+				$conf['file']=$uppath;
 			}
-		}
-		return json_decode(json_encode($conf),FALSE);
+			else if($last=='webroot'&&$last2=='app'&&file_exists($uppath2."/lib/Cake/VERSION.txt"))
+			{
+				//$conf['Engine']='CakePHP';
+				$conf['Engine']=$this->get_cakephp_version($uppath2);
+				$conf['file']=$uppath2;
+			}
+		
+		//
+		$a=explode("/",$conf['file']);
+		$conf['filename']=array_pop($a);
+		//
+		return $conf;
 	}
 // --------------------------------------------------------------------
 
@@ -138,28 +199,68 @@ class HomeController extends BaseController
 		$databases=$this->get_show_databases();
 		$sites=array();
 
+//
 		$srcfiles=glob("/etc/apache2/sites-available/*.conf");
 		$sites_available=array();
 		foreach ($srcfiles as $file) {
 			$parts=explode("/",$file);
 			$filename=$parts[count($parts)-1];
-			$sites_available[$filename]=$this->decode_conf($file);
+			$conf=$this->decode_conf($file);
+			$sites_available[]=$conf;
 
-			$sites[$filename]=$sites_available[$filename]->IP;
+			$sites[$conf['filename']]=$conf['IP'];
 		}
-
+//
 		$srcfiles=glob("/etc/apache2/sites-enabled/*.conf");
 		$sites_enabled=array();
-		foreach ($srcfiles as $file) {
+		foreach ($srcfiles as $file) 
+		{
 			$parts=explode("/",$file);
 			$filename=$parts[count($parts)-1];
-			$sites_enabled[$filename]=$this->decode_conf($file);
+			$conf=$this->decode_conf($file);
+			$sites_enabled[]=$conf;
 		}
+
+//
+		$folder="/var/www";
+		$srcfiles=scandir($folder);
+		$folders=array();
+		foreach ($srcfiles as $filename)
+		{
+			$file="$folder/$filename";
+			if(!in_array($filename,array('.','..'))&&is_dir($file))
+			{
+				$found=false;
+				foreach($sites_available as $a)
+				{
+					if($a['filename']==$filename)
+					{
+						$found=true;
+						break;
+					}
+				}
+				if(!$found)
+				{
+					$folders[$filename]=array(
+						'file'=>$file,
+						'filename'=>$filename,
+						'size'=>!is_dir("$file")?0:count(scandir("$file/"))
+						);
+				}
+			}
+		}
+
+//
+		$sites_available= json_decode(json_encode($sites_available),FALSE);
+		$sites_enabled= json_decode(json_encode($sites_enabled),FALSE);
+		$folders= json_decode(json_encode($folders),FALSE);
+
 		return View::make('home.sites')
 		->with('meta_title', 'Sites')
 		->with('sites', $sites)
-		->with('sites_available', $sites_available)
-		->with('sites_enabled', $sites_enabled)
+		->with('sites_available', $sites_available )
+		->with('sites_enabled', $sites_enabled )
+		->with('folders', $folders )
 		;
 	}
 
@@ -182,7 +283,6 @@ class HomeController extends BaseController
 			);
 		foreach($databases as $database)
 		{
-		//	echo "database=$database<br>";
 			if(!in_array($database,array('','mysql','performance_schema','information_schema')))
 			{
 			//$tables=DB::select("SHOW TABLE STATUS FROM ?;",array($database));
@@ -194,11 +294,8 @@ class HomeController extends BaseController
 			{
 				$datas[$database]=json_decode(json_encode($default),FALSE);
 			}
-			//	echo "<pre>"; print_r($tables); echo "</pre>";; 
-				//echo "<hr><hr>";
 		}
-		//echo "<pre>"; print_r($datas); exit; 
-
+	
 		return View::make('home.databases')
 		->with('meta_title', 'Databases')
 		->with('databases', $databases)
@@ -213,7 +310,6 @@ class HomeController extends BaseController
 	{
 		$databases=$this->get_show_databases();
 		$sites=array();
-
 
 		$plugins=DB::select("SHOW PLUGINS");
 		$processlists=DB::select("SHOW PROCESSLIST");

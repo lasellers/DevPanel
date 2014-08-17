@@ -61,6 +61,8 @@ class BinaryFileResponse extends Response
      * @param null|string         $contentDisposition The type of Content-Disposition to set automatically with the filename
      * @param bool                $autoEtag           Whether the ETag header should be automatically set
      * @param bool                $autoLastModified   Whether the Last-Modified header should be automatically set
+     *
+     * @return BinaryResponse The created response
      */
     public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
     {
@@ -185,7 +187,7 @@ class BinaryFileResponse extends Response
             $path = $this->file->getRealPath();
             if (strtolower($type) == 'x-accel-redirect') {
                 // Do X-Accel-Mapping substitutions.
-                foreach (explode(',', $request->headers->get('X-Accel-Mapping', ''))  as $mapping) {
+                foreach (explode(',', $request->headers->get('X-Accel-Mapping', '')) as $mapping) {
                     $mapping = explode('=', $mapping, 2);
 
                     if (2 == count($mapping)) {
