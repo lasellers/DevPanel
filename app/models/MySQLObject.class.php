@@ -8,7 +8,6 @@ class MySQLObject
 {
     // -------------------------------------------------------------------------------------------
 
-
     public function __construct()
     {
     }
@@ -18,13 +17,13 @@ class MySQLObject
     // -------------------------------------------------------------------------------------------
 
     public static function print_obj_all($database,$tables)
-{
-echo "<table class=\"table table-striped table-hover table-responsive\">\r\n";
-echo MySQLObject::print_obj_database($database,count($tables)-1);
-echo MySQLObject::print_obj_header($tables[0],$database);
-echo MySQLObject::print_obj($tables,$database);
-echo "</table>\r\n";
- }
+    {
+        echo "<table class=\"table table-striped table-hover table-responsive\">\r\n";
+        echo MySQLObject::print_obj_database($database,count($tables)-1);
+        echo MySQLObject::print_obj_header($tables[0],$database);
+        echo MySQLObject::print_obj($tables,$database);
+        echo "</table>\r\n";
+    }
 
   // -------------------------------------------------------------------------------------------
 
@@ -42,7 +41,7 @@ echo "</table>\r\n";
     {
       echo "<theader class='database-header' id='database-$database-header' style='display: none'>\r\n";
       echo '<tr>';
-       foreach($obj as $k=>$v)
+      foreach($obj as $k=>$v)
       {
         echo '<th>'.$k.'</th>';
     }
@@ -53,12 +52,12 @@ echo "</table>\r\n";
 
 public static function print_obj($objs,$database)
 {
- echo "<tbody class='database-body' id='database-$database-body' style='display: none'>\r\n";
- foreach($objs as $obj)
- {
-     echo "<tr>";
-     foreach($obj as $k=>$v)
-     {
+   echo "<tbody class='database-body' id='database-$database-body' style='display: none'>\r\n";
+   foreach($objs as $obj)
+   {
+       echo "<tr>";
+       foreach($obj as $k=>$v)
+       {
         echo '<td>'.$v.'</td>';
     }
     echo "</tr>\r\n";
