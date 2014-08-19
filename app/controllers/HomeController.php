@@ -10,237 +10,6 @@ class HomeController extends BaseController
 //		$this->beforeFilter('csrf', array ('on'=>'post'));
 	}
 
-//
-	private function get_show_databases()
-	{
-		$show_databases=DB::select("SHOW DATABASES");
-
-		$databases=array();
-		foreach($show_databases as $database)
-		{
-			$databases[]=$database->Database;
-		}
-
-		return $databases;
-	}
-	
-
-
-// --------------------------------------------------------------------
-
-	private function get_main_ip()
-		{
-			$ip='127.0.0.1';
-
-$autos=array();
-$primary_auto='eth0';
-
-			$file="/etc/network/interfaces";
-		if(file_exists($file))
-		{
-			$raw=file_get_contents($file);
-			$csv=explode("\n",$raw);
-
-			//
-			foreach($csv as $line)
-			{
-				$line=trim($line);
-				$a=explode(" ",$line);
-				if($a[0]=='auto')
-				{
-					$autos[]=$a[1];
-				}
-			}
-			foreach($autos as $auto)
-			{
-				if(!in_array($auto,array('lo'))&&(strpos(':',$auto)===false))
-				{
-					$primary_auto=$auto;
-					break;
-			}
-		}
-		//	print_r($autos);
-	//echo "primary auto=$primary_auto<br>";
-			//
-			$searching=false;
-			foreach($csv as $line)
-			{
-				$line=trim($line);
-				$a=explode(" ",$line);
-				if($a[0]=='iface'&&$a[1]==$primary_auto)
-				{
-					$searching=true;
-				}
-				else if($searching===true&&$a[0]=='address')
-				{
-					$ip=$a[1];
-					break;
-				}
-			}
-		}
-
-		return array($ip,$primary_auto,$autos);
-	}
-
-
-// --------------------------------------------------------------------
-
-	private function get_drupal_version($path)
-	{
-//		$arr=array('name')
-		if(file_exists($path."/CHANGELOG.txt"))
-		{
-			$raw=file_get_contents($path."/CHANGELOG.txt");
-			$csv=explode("\n",$raw);
-			foreach($csv as $line)
-			{
-				$line=trim($line);
-				$a=explode(" ",$line);
-				if($a[0]=='Drupal')
-					return $line;
-			}
-		}
-
-		return 'Drupal';
-	}
-
-// --------------------------------------------------------------------
-
-	private function get_laravel_version($path)
-	{
-		//echo "$path/vendor/composer/installed.json<br>";
-		if(file_exists($path."/vendor/composer/installed.json"))
-		{
-			$json=file_get_contents($path."/vendor/composer/installed.json");
-		//	print_r($json); 
-			$installs=json_decode($json);
-			foreach($installs as $install)
-			{
-				if($install->name=='laravel/framework')
-				{
-					return 'Laravel '.$install->version;
-				}
-			}
-		}
-
-		return 'Laravel';
-	}
-// --------------------------------------------------------------------
-
-	private function get_cakephp_version($path)
-	{
-		if(file_exists($path."/lib/Cake/VERSION.txt"))
-		{
-			$raw=file_get_contents($path."/lib/Cake/VERSION.txt");
-			$csv=explode("\n",$raw);
-			foreach($csv as $line)
-			{
-				$line=trim($line);
-				$a=explode(" ",$line);
-				if(count($a)>2&&$a[1]=='@since')
-				{
-					array_shift($a);
-					array_shift($a);
-					return trim(implode(" ",$a));
-				}
-			}
-		}
-
-		return 'CakePHP';
-	}
-
-
-// --------------------------------------------------------------------
-	private function decode_conf($file)
-	{
-		$conf=array(
-			'Size'=>filesize($file),
-			'ServerAdmin'=>'',
-			'ServerName'=>'',
-			'DocumentRoot'=>'',
-			'ErrorLog'=>'',
-			'CustomLog'=>'',
-			'IP'=>'',
-			'Engine'=>'',
-			'file'=>$file,
-			'filename'=>''
-			);
-		$raw=file_get_contents($file);
-		$csv=explode("\n",$raw);
-		foreach($csv as $line)
-		{
-			$line=trim($line);
-			$a=explode(" ",$line);
-			if(in_array($a[0],
-				array('ServerAdmin','ServerName','DocumentRoot','ErrorLog','CustomLog','<VirtualHost')))
-			{
-				if($a[0]=='<VirtualHost')
-					$conf['IP']= preg_replace('/[^0-9.:]/', '', $a[1]);
-				else
-					$conf[$a[0]]=$a[1];
-			}
-		}
-
-			//
-		$path=$conf['DocumentRoot'];
-		$conf['file']=$path;
-		$a=explode("/",$path);
-		$last=array_pop($a);
-		$uppath=implode("/",$a);
-		$last2=array_pop($a);
-		$uppath2=implode("/",$a);
-		$last3=array_pop($a);
-		$uppath3=implode("/",$a);
-			//
-		if($conf['DocumentRoot']=="/var/www")
-		{
-			$conf['Engine']='Default ';
-				//$conf['Engine']=$this->get_drupal_version($path);
-			$conf['file']='default'.$conf['IP'];
-		}
-		else if(file_exists($path."/sites/default/settings.php"))
-		{
-				//$conf['Engine']='Drupal';
-			if($last2=='www')
-			{
-				$conf['Engine']=$this->get_drupal_version($path);
-				$conf['file']=$path;
-			}
-			else
-			{
-				$conf['Engine']=$this->get_drupal_version($path);
-				$conf['file']=$uppath;
-			}
-		}
-		else if(file_exists($path."/wp-admin/"))
-		{
-			$conf['Engine']='WordPress';
-		}
-		else if(file_exists($path."/app/start/artisan.php"))
-		{
-				//$conf['Engine']='Laravel';
-			$conf['Engine']=$this->get_laravel_version($uppath);
-			$conf['file']=$uppath;
-		}
-		else if($last=='public'&&file_exists($uppath."/app/start/artisan.php"))
-		{
-				//$conf['Engine']='Laravel';
-			$conf['Engine']=$this->get_laravel_version($uppath);
-			$conf['file']=$uppath;
-		}
-		else if($last=='webroot'&&$last2=='app'&&file_exists($uppath2."/lib/Cake/VERSION.txt"))
-		{
-				//$conf['Engine']='CakePHP';
-			$conf['Engine']=$this->get_cakephp_version($uppath2);
-			$conf['file']=$uppath2;
-		}
-		
-		//
-		$a=explode("/",$conf['file']);
-		$conf['filename']=array_pop($a);
-		//
-		return $conf;
-	}
 // --------------------------------------------------------------------
 
 	public function index()
@@ -254,85 +23,67 @@ $primary_auto='eth0';
 
 	public function sites()
 	{
-		$databases=$this->get_show_databases();
-		$sites=array();
-
-//
-		$srcfiles=glob("/etc/apache2/sites-available/*.conf");
-		$sites_available=array();
-		foreach ($srcfiles as $file) {
-			$parts=explode("/",$file);
-			$filename=$parts[count($parts)-1];
-			$conf=$this->decode_conf($file);
-			$sites_available[]=$conf;
-
-			$sites[$conf['filename']]=$conf['IP'];
-		}
-//
-		$srcfiles=glob("/etc/apache2/sites-enabled/*.conf");
-		$sites_enabled=array();
-		foreach ($srcfiles as $file) 
-		{
-			$parts=explode("/",$file);
-			$filename=$parts[count($parts)-1];
-			$conf=$this->decode_conf($file);
-			$sites_enabled[]=$conf;
-		}
-
-//
-		$folder="/var/www";
-		$srcfiles=scandir($folder);
-		$folders=array();
-		foreach ($srcfiles as $filename)
-		{
-			$file="$folder/$filename";
-			if(!in_array($filename,array('.','..'))&&is_dir($file))
-			{
-				$found=false;
-				foreach($sites_available as $a)
-				{
-					if($a['filename']==$filename)
-					{
-						$found=true;
-						break;
-					}
-				}
-				if(!$found)
-				{
-					$folders[$filename]=array(
-						'file'=>$file,
-						'filename'=>$filename,
-						'size'=>!is_dir("$file")?0:count(scandir("$file/"))
-						);
-				}
-			}
-		}
+		$databases=Discovery::get_show_databases();
+	
+		$sites_available=Discovery::get_sites_available();
+		$sites_enabled=Discovery::get_sites_enabled();
+		$sites=Discovery::extract_site_ips($sites_available);
+		$folders=Discovery::get_web_folders($sites_available);
 
 		//
-		list($ip,$primary_auto,$autos)=$this->get_main_ip();
+		list($autos,$interfaces,$ip,$primary_auto)=Discovery::get_network_interfaces();
 
 //
-		$sites_available= json_decode(json_encode($sites_available),FALSE);
-		$sites_enabled= json_decode(json_encode($sites_enabled),FALSE);
-		$folders= json_decode(json_encode($folders),FALSE);
-
 		return View::make('home.sites')
 		->with('meta_title', 'Sites')
 		->with('sites', $sites)
-		->with('sites_available', $sites_available )
-		->with('sites_enabled', $sites_enabled )
-		->with('folders', $folders )
+		->with('sites_available', json_decode(json_encode($sites_available),FALSE) )
+		->with('sites_enabled', json_decode(json_encode($sites_enabled),FALSE) )
+		->with('folders',json_decode(json_encode($folders),FALSE) )
 		->with('ip', $ip )
 		->with('primary_auto', $primary_auto )
 		->with('autos', $autos )
+		->with('interfaces', $interfaces )
 		;
+	}
+
+	// ---------------------------------------------------------------
+
+	public function network()
+	{
+		$databases=Discovery::get_show_databases();
+	
+		$sites_available=Discovery::get_sites_available();
+		//$sites_enabled=Discovery::get_sites_enabled();
+		$sites=Discovery::extract_site_ips($sites_available);
+		$folders=Discovery::get_web_folders($sites_available);
+
+		//
+		list($autos,$interfaces,$ip,$primary_auto)=Discovery::get_network_interfaces();
+
+//
+		$sites_available= json_decode(json_encode($sites_available),FALSE);
+		//$sites_enabled= json_decode(json_encode($sites_enabled),FALSE);
+		//$folders= json_decode(json_encode($folders),FALSE);
+
+		return View::make('home.network')
+		->with('meta_title', 'Network')
+		->with('sites', $sites)
+		//->with('sites_available', $sites_available )
+		//->with('sites_enabled', $sites_enabled )
+		//->with('folders', $folders )
+		->with('ip', $ip )
+		->with('primary_auto', $primary_auto )
+		->with('autos', $autos )
+			->with('interfaces', $interfaces )
+	;
 	}
 
 	// ---------------------------------------------------------------
 
 	public function databases()
 	{
-		$databases=$this->get_show_databases();
+		$databases=Discovery::get_show_databases();
 
 		//
 		$datas=array();
@@ -372,7 +123,7 @@ $primary_auto='eth0';
 
 	public function mysql()
 	{
-		$databases=$this->get_show_databases();
+		$databases=Discovery::get_show_databases();
 		$sites=array();
 
 		$plugins=DB::select("SHOW PLUGINS");
@@ -394,7 +145,6 @@ $primary_auto='eth0';
 	}
 	// ---------------------------------------------------------------
 
-
 	public function mongo()
 	{
 		return View::make('home.mongo')
@@ -402,10 +152,16 @@ $primary_auto='eth0';
 		;
 	}
 
-
 	// ---------------------------------------------------------------
 
+	public function db_postgresql()
+	{
+		return View::make('home.postgresql')
+		->with('meta_title', 'PostgreSql')
+		;
+	}
 
+	// ---------------------------------------------------------------
 
 	public function apache2()
 	{

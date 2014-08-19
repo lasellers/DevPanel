@@ -14,12 +14,14 @@
 @section('content')
 <p>Primary Address <i>{{$ip}}</i></p>
 
+
 <h2>Apache2 Sites Available</h2>
 <div class="row">
 	<div class="col-md-12 panel-main">
 
 		<table class="table table-striped table-hover table-responsive">
 			<tr>
+				<th>conf_filename</th>
 				<th>filename</th>
 				<th>Size</th>
 				<th>ServerAdmin</th>
@@ -32,6 +34,7 @@
 		</tr>
 		@foreach($sites_available as $data)
 		<tr>
+			<td>{{$data->conf_filename}}</td>
 			<td>{{$data->filename}}</td>
 			<td>{{$data->Size}}</td>
 			<td>{{$data->ServerAdmin}}</td>
@@ -49,16 +52,6 @@
 <div>
 
 
-
-<h2>Addresses</h2>
-<div class="row">
-	<div class="col-md-12 panel-main">
-
-	@foreach($autos as $auto)
-		<div class="col-md-1">{{$auto}}</div>
-		@endforeach
-</div>
-<div>
 
 	<h2>Apache2 Sites Enabled</h2>
 	<div class="row">

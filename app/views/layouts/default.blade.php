@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" manifest="devpanel.appcache">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>{{$meta_title}} - Intrafoundation Software</title>
+  <title>{{$meta_title}} - DevPanel</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="vi wport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="{{$meta_title}}">
@@ -32,11 +32,13 @@
     <ul class="nav navbar-nav">
       <li class="active"><a href="/">Home</a></li>
       <li><a href="/sites">Sites</a></li>
-      <li><a href="/databases">Databases</a></li>
+      <li><a href="/network">Network</a></li>
+     <li><a href="/databases">Databases</a></li>
       <?php if(file_exists('/etc/mysql/')) { ?><li><a href="/mysql">MySQL</a></li><?php } ?>
-      <?php if(file_exists('/etc/mongo/')) { ?><li><a href="/mongo">Mongo</a></li><?php } ?>
+      <?php if(file_exists('/etc/mongodb.conf')) { ?><li><a href="/mongo">Mongo</a></li><?php } ?>
+       <?php if(file_exists('/etc/postgresql/')) { ?><li><a href="/postgresql">Postgresql</a></li><?php } ?>
       <?php if(file_exists('/etc/apache2/')) { ?><li><a href="/apache2">Apache2</a></li><?php } ?>
-      <?php if(file_exists('/etc/nginx/')) { ?><li><a href="/apache2">Nginx</a></li><?php } ?>
+      <?php if(file_exists('/etc/nginx/')) { ?><li><a href="/nginx">Nginx</a></li><?php } ?>
       <!--li><a href="/node.js">Node.js</a></li-->
      @yield('nav')
       <li><a href="http://github.com/lasellers/DevPanel">Github</a></li>
@@ -73,8 +75,8 @@
 
 <hr>
 
-<div class="row" id="status-dialog" style="display:none">
-  <img src="/images/spinner.gif">
+<div class="row" id="status-dialog" style="display:block">
+  <!--img src="/images/spinner.gif"-->
 </div>
 
 <nav id="footer" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
@@ -86,7 +88,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#"><small>by Intrafoundation Software 2014 v 0.0.4 alpha</small></a>
+    <a class="navbar-brand" href="#"><small>by Intrafoundation Software 2014 v 0.0.5 alpha</small></a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->

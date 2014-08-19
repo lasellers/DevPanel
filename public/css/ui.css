@@ -27,3 +27,9 @@ p:nth-child(1)
 table caption {
   font-size: 24pt;
 }
+.table caption {
+    text-align: left;
+}
+.hide-show-button {
+    font-size: 12pt !important;
+}

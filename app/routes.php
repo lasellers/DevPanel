@@ -10,14 +10,19 @@
  */
 Route::get('/sites', 'HomeController@sites');
 Route::get('/databases', 'HomeController@databases');
+Route::get('/network', 'HomeController@network');
 Route::get('/mysql', 'HomeController@mysql');
 Route::get('/mongo', 'HomeController@mongo');
+Route::get('/postgresql', 'HomeController@db_postgresql');
 Route::get('/apache2', 'HomeController@apache2');
 Route::get('/nginx', 'HomeController@nginx');
 
 Route::get('/', 'HomeController@index');
 
+Route::get('/api/get_sites_available', 'APIController@get_sites_available');
+
 Route::controller('home', 'HomeController');
+Route::controller('api', 'APIController');
 
 /*
   |--------------------------------------------------------------------------
