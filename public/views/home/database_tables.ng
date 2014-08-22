@@ -30,28 +30,27 @@
 					<th>Comment</th>
 				</tr>
 				<tr ng-repeat="table in tables">
-					<td>@{{table.database}}</td>
-					<td>@{{table.Name}}</td>
-					<td>@{{table.Engine}}</td>
-					<td>@{{table.Version}}</td>
-					<td>@{{table.Row_format}}</td>
-					<td>@{{table.Rows}}</td>
-					<td>@{{table.Avg_row_length}}</td>
-					<td>@{{table.Data_length}}</td>
-					<td>@{{table.Max_data_length}}</td>
-					<td>@{{table.Index_length}}</td>
-					<td>@{{table.Data_free}}</td>
-					<td>@{{table.Auto_increment}}</td>
-					<td>@{{table.Create_time}}</td>
-					<td>@{{table.Update_time}}</td>
-					<td>@{{table.Check_time}}</td>
-					<td>@{{table.Collation}}</td>
-					<td>@{{table.Checksum}}</td>
-					<td>@{{table.Create_options}}</td>
-					<td>@{{table.Comment}}</td>
+					<td>{{table.database}}</td>
+					<td>{{table.Name}}</td>
+					<td>{{table.Engine}}</td>
+					<td>{{table.Version}}</td>
+					<td>{{table.Row_format}}</td>
+					<td>{{table.Rows}}</td>
+					<td>{{table.Avg_row_length}}</td>
+					<td>{{table.Data_length}}</td>
+					<td>{{table.Max_data_length}}</td>
+					<td>{{table.Index_length}}</td>
+					<td>{{table.Data_free}}</td>
+					<td>{{table.Auto_increment}}</td>
+					<td>{{table.Create_time}}</td>
+					<td>{{table.Update_time}}</td>
+					<td>{{table.Check_time}}</td>
+					<td>{{table.Collation}}</td>
+					<td>{{table.Checksum}}</td>
+					<td>{{table.Create_options}}</td>
+					<td>{{table.Comment}}</td>
 				</tr>
 			</table>
 		</div>
 	</div>
-
 </article>
