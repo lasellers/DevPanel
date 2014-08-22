@@ -4,7 +4,7 @@
  */
 class HomeController extends BaseController
 {
-	public $restful=true;
+	public $restful=false;
 	public function __construct()
 	{
 //		$this->beforeFilter('csrf', array ('on'=>'post'));
@@ -20,13 +20,12 @@ class HomeController extends BaseController
 	}
 
 // --------------------------------------------------------------------
-
+/*
 	public function sites()
 	{
 		$databases=Discovery::get_show_databases();
 	
-		$sites_available=Discovery::get_sites_available();
-		$sites_enabled=Discovery::get_sites_enabled();
+		list($sites_available,$sites_enabled)=Discovery::get_sites();
 		$sites=Discovery::extract_site_ips($sites_available);
 		$folders=Discovery::get_web_folders($sites_available);
 
@@ -53,16 +52,15 @@ class HomeController extends BaseController
 	{
 		$databases=Discovery::get_show_databases();
 	
-		$sites_available=Discovery::get_sites_available();
-		//$sites_enabled=Discovery::get_sites_enabled();
-		$sites=Discovery::extract_site_ips($sites_available);
+		list($sites_available,$sites_enabled)=Discovery::get_sites();
+			$sites=Discovery::extract_site_ips($sites_available);
 		$folders=Discovery::get_web_folders($sites_available);
 
 		//
 		list($autos,$interfaces,$ip,$primary_auto)=Discovery::get_network_interfaces();
 
 //
-		$sites_available= json_decode(json_encode($sites_available),FALSE);
+		//$sites_available= json_decode(json_encode($sites_available),FALSE);
 		//$sites_enabled= json_decode(json_encode($sites_enabled),FALSE);
 		//$folders= json_decode(json_encode($folders),FALSE);
 
@@ -170,5 +168,6 @@ class HomeController extends BaseController
 		;
 	}
 	// --------------------------------------------------------------------
+*/
 }
 ?>

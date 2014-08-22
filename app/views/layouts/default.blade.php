@@ -9,13 +9,14 @@
   <meta name="author" content="">
 
   <!-- the styles -->
-  {{ HTML::style('/bootstrap/css/bootstrap.css') }}
+  <!-- HTML::style('/bootstrap/css/bootstrap.css') -->
+   {{ HTML::style('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css') }}
   {{ HTML::style('/css/ui.css?ver=12032014') }}
-  
+
   <link rel="shortcut icon" href="/ico/favicon.png">
 </head>
 
-<body>
+<body ng-app="devpanel" ng-controller="App" class="well">
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 
     <div class="navbar-header">
@@ -99,13 +100,14 @@
   </div><!-- /.navbar-collapse -->
 </nav>
 
-
+<!-- https://developers.google.com/speed/libraries/devguide -->
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="/bootstrap/js/bootstrap.min.js"></script>
-<script src="/js/ui.js?ver=12032013"></script>
+<!--script src="/bootstrap/js/bootstrap.min.js"></script-->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerwithlabel/1.1.3/src/markerwithlabel.js"></script>
-
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+<script src="/js/ui.js?ver=12032013"></script>
 <!--script src="/jquery/ui/js/jquery-1.9.1.js"></script-->
 <!--script src="/jquery/ui/js/jquery-ui-1.10.3.min.js"></script-->
 <!--script src="/jquery/jquery.cookie.js?ver=20140509"></script-->

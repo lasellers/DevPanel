@@ -8,18 +8,16 @@
   | and give it the Closure to execute when that URI is requested.
   |
  */
-Route::get('/sites', 'HomeController@sites');
-Route::get('/databases', 'HomeController@databases');
-Route::get('/network', 'HomeController@network');
-Route::get('/mysql', 'HomeController@mysql');
-Route::get('/mongo', 'HomeController@mongo');
-Route::get('/postgresql', 'HomeController@db_postgresql');
-Route::get('/apache2', 'HomeController@apache2');
-Route::get('/nginx', 'HomeController@nginx');
-
 Route::get('/', 'HomeController@index');
 
-Route::get('/api/get_sites_available', 'APIController@get_sites_available');
+Route::get('/api/sites', 'APIController@get_sites');
+Route::get('/api/unassigned_folders', 'APIController@get_unassigned_folders');
+Route::get('/api/network_interfaces', 'APIController@get_network_interfaces');
+Route::get('/api/databases', 'APIController@get_databases');
+Route::get('/api/database_tables', 'APIController@get_database_tables');
+Route::get('/api/readme', 'APIController@get_readme');
+Route::get('/api/servers', 'APIController@get_servers');
+Route::get('/api/server/{type}', 'APIController@get_server');
 
 Route::controller('home', 'HomeController');
 Route::controller('api', 'APIController');

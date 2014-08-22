@@ -16,6 +16,23 @@ php artisan migrate
 
 ### Releases
 
+#### 0.0.6 alpha 8/22/2014
+Now completely refactored into AngularJS with a RESTful API. :)
+
+I'd never used AngularJS at all until two days ago so ... it's probably not "best practices". Yet. But it'll get there.
+
+TODO: Clean up all UI/UX issues. It needs to be much smoother and fluid. Need to read-up on Bootstrap + AngularJS to sort some issues. Harder than it needs to be. Need to either find a good libary or just makes some open sources directives to handle this stuff.
+
+TODO: Consider localStorage option to enhance speed? hmm.
+
+TODO: Add github-awareness.
+
+TODO: Add .NET awareness. Add ColdFusion awareness.
+
+TODO: __Suggest__ to all frameworks that they add in a json file marker (outside of composer.json as not all use composer.json -- .NET for example. A project.json with summary and high-level (locations) manifest.)
+
+TODO: !!! Add mongolab support so it can save the local RESTful cache out to mongo, then once all your dev machines are setup with this you can ultimately browse through a list of project states on all machines in your dev group or business. :) !!! Also store activity data. DevPanel == github-ish project activity+states.
+
 #### 0.0.5 alpha
 Added CodeIgniter and WordPress awareness. Began work to mold into a single page Web Application that pulls the data from Ajax/Json Web Services. May upgrade to AngularJS next go around. Added Network pane. Reworked other panes.
 

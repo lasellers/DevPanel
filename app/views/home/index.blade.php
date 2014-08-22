@@ -1,42 +1,96 @@
-@extends('layouts.default')
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+	<meta charset="utf-8">
+	<title>{{$meta_title}} - DevPanel</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="vi wport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="DevPanel">
+	<meta name="author" content="">
 
-@section('nav')
+	<link media="all" type="text/css" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link media="all" type="text/css" rel="stylesheet" href="/css/ui.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular-route.js"></script>
 
-@stop
+	<script src="/js/devPanelCtrl.js?ver=08022014"></script>
 
-@section('content')
-<!--
-<div ng-app="">
-	<p>Name: <input type="text" ng-model="name"></p>
-	<p ng-bind="name"></p>
-</div>
--->
+	<link rel="shortcut icon" href="/ico/favicon.png">
+</head>
+
+<body ng-app="devpanel">
+
+	<header ng-controller="Tabs">
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">DevPanel</a>
+				</div>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li ng-repeat="tab in tabs"><a href="#/@{{tab.id}}" ng-click="active='@{{tab.id}}'" class="@{{tab.id}}">@{{tab.title}}</a></li>
+				</ul>
+			</div>
+		</nav>
+		
+	</header>
+
+	<div class="container">
+		<?php
+/* Session::reflash();
+*/ ?>
+@if(Session::has('info'))
+<div class="alert alert-info">{{ Session::get('info') }}</div>
+@endif
+
+@if(Session::has('success'))
+<div class="alert alert-success">{{ Session::get('success') }}</div>
+@endif
+
+@if(Session::has('error'))
+<div class="alert alert-error">{{ Session::get('error') }}</div>
+@endif
+
+@if(Session::has('message'))
+<div class="alert">{{ Session::get('message') }}</div>
+@endif
 
 <main>
-	<div class="jumbotron">
-		<h1>DevPanel</h1>
-		<p>Development Server Panel (DevPanel) is a <em>PHP/Laravel</em> project meant to be placed in the default folder (/var/www) of your LAMP style dev server.</p>
-		<!--p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p-->
+	<div ng-view></div>
+</main>
+
+<hr>
+
+<div class="row" id="status-dialog" style="display:block">
+	<!--img src="/images/spinner.gif"-->
+</div>
+
+<details>
+	<summary>by Intrafoundation Software 2014.</summary>
+	<p>DevPanel is open-sourced software licensed under the [MIT license] (<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>)</p>
+</details>
+
+<nav id="footer" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#footer-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="#"><small>by Intrafoundation Software 2014 v 0.0.6 alpha</small></a>
 	</div>
 
-	<details>
-		<summary>by Intrafoundation Software 2014.</summary>
-		<p>DevPanel is open-sourced software licensed under the [MIT license] (<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>)</p>
-	</details>
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse" id="footer-collapse">
+		<ul class="nav navbar-nav">
+			<li class="pull-right"><a href="http://github.com/lasellers/DevPanel">Github</a></li>
+		</ul>
+	</div><!-- /.navbar-collapse -->
+</nav>
 
-	<article>
-		<!--
-		<?php
-		$ip = gethostbyname('localhost');
-		echo $ip;
-		?>
-	-->
-	</article>
-
-</main>
-@stop
-
-@section('scripts')
 <script>
 /*
 function supports_html5_storage() {
@@ -60,26 +114,5 @@ console.log("sites_available="+sites_available);
 */
 </script>
 
-<script>
-var sites_available;
-$(document).ready(function(){
-	console.log("Loading apis...");
-	$.ajax({
-		type: "GET",
-		url: "/api/get_sites_available"
-	}).done(function( msg ) {
-
-		$("#status_dialog").html("<p>"+msg+"</p><p>get_sites_available</p>");
-		sites_available=msg;
-		console.log("Loaded get_sites_available..."+msg.data);
-		console.log(msg.data);
-	//	for each(var data in msg.data)
-		{
-			//console.log("data="+data);
-		}
-	});
-});
-</script>
-
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-@stop
+</body>
+</html>

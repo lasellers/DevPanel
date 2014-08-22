@@ -57,14 +57,29 @@ May return other data.
       'error'=>$error
       );
   }
-    //
-      /*if (CLI::is_cli())
-      {
-        $s=var_export($message, true);
-        return $s.CLI::eol();
-      }*/
-      //
-      return Response::json($error);
-    }
+  return Response::json($error);
+}
+
 // --------------------------------------------------------------------
-  }
+
+public static function error_data_response($data=null,$error=false)
+{
+  if(is_object($data))
+  {
+   $json=array(
+    'error'=>false,
+    'data'=>$data
+    );
+ }
+ else
+ {
+  $json=array (
+    'error'=>$error
+    );
+}
+return Response::json($json);
+}
+
+// --------------------------------------------------------------------
+
+}
