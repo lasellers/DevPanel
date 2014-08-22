@@ -14,6 +14,10 @@ php composer.phar diagnose
 
 php artisan migrate
 
+### Screenshot
+
+![Sites menu 0.0.6](devpanel.jpg)
+
 ### Releases
 
 #### 0.0.6 alpha 8/22/2014
