@@ -25,7 +25,7 @@ Now completely refactored into AngularJS with a RESTful API. :)
 
 I'd never used AngularJS at all until two days ago so ... it's probably not "best practices". Yet. But it'll get there.
 
-TODO: Clean up all UI/UX issues. It needs to be much smoother and fluid. Need to read-up on Bootstrap + AngularJS to sort some issues. Harder than it needs to be. Need to either find a good libary or just makes some open sources directives to handle this stuff.
+TODO: Clean up all UI/UX issues. It needs to be much smoother and fluid. Need to read-up on Bootstrap + AngularJS to sort some issues. Harder than it needs to be. Need to either find a good libary or just make some open sources directives to handle this stuff.
 
 TODO: Consider localStorage option to enhance speed? hmm.
 
