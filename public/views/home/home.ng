@@ -1,0 +1,12 @@
+<article ng-controller="HomeCtrl" ng-show="active='home'">
+<div class="jumbotron">
+<h1>DevPanel</h1>
+<p>Development Server Panel (DevPanel) is a <em>PHP/Laravel</em> discovery app for your LAMP style dev server.</p>
+<!--p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p-->
+</div>
+
+<pre>
+{{readme}}
+</pre>
+
+</article>

@@ -1,0 +1,57 @@
+<article ng-controller="DatabasesCtrl" ng-show="active='databases'">
+	<h2>Database Tables
+		  <div class="pull-right">
+		  <small>Search: <input type="text" ng-model="query"> <span ng-bind="query"></span></small>
+		  </div>
+	</h2>
+	<div class="row">
+		<div class="col-md-12 panel-main">
+			<table class="table table-striped table-condensed"  ng-repeat="tables in database_tables | filter:query">
+				<tr>
+					<th>database</th>
+					<th>interface</th>
+					<th>Name</th>
+					<th>Engine</th>
+					<th>Version</th>
+					<th>Row_format</th>
+					<th>Rows</th>
+					<th>Avg_row_length</th>
+					<th>Data_length</th>
+					<th>Max_data_length</th>
+					<th>Index_length</th>
+					<th>Data_free</th>
+					<th>Auto_increment</th>
+					<th>Create_time</th>
+					<th>Update_time</th>
+					<th>Check_time</th>
+					<th>Collation</th>
+					<th>Checksum</th>
+					<th>Create_options</th>
+					<th>Comment</th>
+				</tr>
+				<tr ng-repeat="table in tables">
+					<td>@{{table.database}}</td>
+					<td>@{{table.Name}}</td>
+					<td>@{{table.Engine}}</td>
+					<td>@{{table.Version}}</td>
+					<td>@{{table.Row_format}}</td>
+					<td>@{{table.Rows}}</td>
+					<td>@{{table.Avg_row_length}}</td>
+					<td>@{{table.Data_length}}</td>
+					<td>@{{table.Max_data_length}}</td>
+					<td>@{{table.Index_length}}</td>
+					<td>@{{table.Data_free}}</td>
+					<td>@{{table.Auto_increment}}</td>
+					<td>@{{table.Create_time}}</td>
+					<td>@{{table.Update_time}}</td>
+					<td>@{{table.Check_time}}</td>
+					<td>@{{table.Collation}}</td>
+					<td>@{{table.Checksum}}</td>
+					<td>@{{table.Create_options}}</td>
+					<td>@{{table.Comment}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+</article>

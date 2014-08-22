@@ -1,0 +1,27 @@
+<article ng-controller="NetworkInterfacesCtrl" ng-show="active='interfaces'">
+	<h2>Network Interfaces
+			  <div class="pull-right">
+		  <small>Search: <input type="text" ng-model="query"> <span ng-bind="query"></span></small>
+		  </div>
+	</h2>
+	<div class="row">
+		<div class="col-md-12 panel-main">
+			<table class="table table-striped table-condensed">
+				<tr>
+					<th>interface</th>
+					<th>address</th>
+					<th>network</th>
+					<th>netmask</th>
+					<th>dns-nameservers</th>
+				</tr>
+				<tr ng-repeat="interface in interfaces | filter:query">
+					<td>{{interface.name}}</td>
+					<td>{{interface.address}}</td>
+					<td>{{interface.network}}</td>
+					<td>{{interface.netmask}}</td>
+					<td>{{interface.dns_nameservers}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</article>

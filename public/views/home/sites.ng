@@ -1,0 +1,40 @@
+<article ng-controller="SitesCtrl" ng-show="active='sites'">
+	<h2>Sites <small>Primary Address <i>{{primary_ip}} </i></small>
+		  <div class="pull-right">
+		  <small>Search: <input type="text" ng-model="query"> <span ng-bind="query"></span></small>
+		  </div>
+	</h2>
+	<div class="row">
+		<div class="col-md-12 panel-main">
+
+			<table class="table table-striped table-hover table-responsive">
+				<tr>
+					<th>IP</th>
+					<th>ServerName</th>
+					<th>DocumentRoot</th>
+					<th>Engine</th>
+					<th>Enabled</th>
+					<th>Server Brand</th>
+					<th>conf_filename</th>
+					<th>filename</th>
+					<th>ServerAdmin</th>
+					<th>ErrorLog</th>
+					<th>CustomLog</th>
+				</tr>
+				<tr ng-repeat="site in sites | filter:query">
+					<td><a href="http://{{site.IP}}">{{site.IP}}</a></td>
+					<td>{{site.ServerName}}</td>
+					<td>{{site.DocumentRoot}}</td>
+					<td>{{site.Engine}}</td>
+					<td>{{site.Enabled}}</td>
+					<td>{{site.ServerBrand}}</td>
+					<td>{{site.conf_filename}}</td>
+					<td>{{site.filename}}</td>
+					<td>{{site.ServerAdmin}}</td>
+					<td>{{site.ErrorLog}}</td>
+					<td>{{site.CustomLog}}</td>
+				</tr>
+			</table>
+		</div>
+	<div>
+</article>
